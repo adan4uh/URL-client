@@ -4,7 +4,7 @@ import './Navbar.css'
 import { useState } from 'react'
 
 const Navbar = () => {
-    const [data, setData] = useState({ originalUrl: '' });
+    const [data, setData] = React.useState({ originalUrl: '' });
     const [result, setResult] = useState({
         message: ''
     })
