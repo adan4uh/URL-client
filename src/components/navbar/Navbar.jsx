@@ -34,8 +34,18 @@ const Navbar = () => {
             }
           }
 
-    const handlePasteButton = () =>{
-       
+    const handlePasteButton = async () =>{
+       if (data.originalUrl === '') {
+            setData({
+        originalUrl: await navigator.clipboard.readText()
+       })
+       }else{
+        await navigator.clipboard.writeText(data.originalUrl)
+        setResult({
+            message: 'URL copied!'
+        })
+       }
+        
     }
 
     return (
@@ -72,7 +82,10 @@ const Navbar = () => {
                             setResult({})
                         }}
                         placeholder='Paste URL...' />
-                        <i className="fa-solid fa-paste" id='copyButton'></i>
+                        <i 
+                        className={data.originalUrl === '' ? 'fa-solid fa-paste' : 'fa-solid fa-copy'}
+                        onClick={handlePasteButton}
+                        id='copyButton'></i>
                     <button onClick={handleCreateButton}>Create</button>
                 </div>
 
