@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import './Navbar.css'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 const Navbar = () => {
     const [data, setData] = React.useState({ originalUrl: '' });
@@ -12,17 +13,33 @@ const Navbar = () => {
     const [mode, setMode] = useState('moon');
 
     const handleCreateButton = async () => {
+        const id = toast.loading('Creating ShortURL...!')
+
         try {
             const res = await axios.post(`${import.meta.env.VITE_API_URL}/shorten`, data);
             setData({ originalUrl: res.data.shortUrl })
             
             setError(false)
             setResult(res.data);
-
+           
+            toast.update(id, {
+                render: res.data.message,
+                type: 'success',
+                isLoading: false,
+                autoClose: 3000
+            })
 
         } catch (error) {
              setError(true)
             setResult(error.response?.data)
+           
+            toast.update(id, {
+                render: error.response?.data?.message,
+                type: 'error',
+                isLoading: false,
+                autoClose: 3000
+            })
+
         }
     }
 
@@ -39,11 +56,14 @@ const Navbar = () => {
             setData({
         originalUrl: await navigator.clipboard.readText()
        })
+
+       toast.success('URL Pasted!')
        }else{
         await navigator.clipboard.writeText(data.originalUrl)
         setResult({
             message: 'URL copied!'
         })
+        toast.success('URL Copied!')
        }
         
     }
@@ -52,7 +72,7 @@ const Navbar = () => {
         <div className={mode === 'moon' ? 'mainContainer' : 'darkModeNav'}>
             <div className="menuContainer">
                 <ul>
-                    <li><i className={`fa-regular fa-${mode}`} onClick={handleModeButton}></i></li>
+                    <li><i className={`fa-regular fa-${mode} darkModeIcon`} onClick={handleModeButton}></i></li>
                     <li>Home</li>
                     <li>Pricing</li>
                     <li>Doucmentation</li>
@@ -68,9 +88,9 @@ const Navbar = () => {
 
                 <div className="searchBar">
                     <i className="fa-solid fa-magnifying-glass"></i>
-                    <span style={{
+                    {/* <span style={{
                         color: error ? "red" : "green"
-                    }}>{result.message}</span>
+                    }}>{result.message}</span> */}
                     <input
                         name='searchInput'
                         type="text"

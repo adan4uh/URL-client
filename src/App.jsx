@@ -3,6 +3,7 @@ import './App.css'
 import React, { useEffect } from 'react'
 import Navbar from './components/navbar/Navbar'
 import MainContent from './components/mainContent/MainContent'
+import {ToastContainer} from 'react-toastify'
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
       <div className="mainContent">
         <MainContent />
       </div>
+      <ToastContainer/>
     </div>
   )
 }
